@@ -18,6 +18,7 @@ runs:
       run: |
         git status
         git restore --source=HEAD --staged --worktree -- .github
+        git reset  # Build the index
         git status
 
     - name: Commit and Push - Replacements
