@@ -1,0 +1,29 @@
+name: 'Custom push for NB Next customisation'
+description: 'Do basic cleanup before attempting to push to branch'
+inputs:
+  commit_message:
+    description: "commit message is to be used during push"
+    default: "Automated commit"
+    required: true
+  branch:
+    description: "Branch to be pushed"
+    required: false
+    default: "develop-updated"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Restore unwanted changes
+      shell: bash
+      run: |
+        git status
+        git restore --source=HEAD --staged --worktree -- .github
+        git status
+
+    - name: Commit and Push - Replacements
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        push_options: '--force'
+        branch: ${{ inputs.branch }}
+        create_branch: true
+        commit_message: ${{ inputs.commit_message }}
